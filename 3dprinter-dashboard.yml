@@ -1,0 +1,88 @@
+type: grid
+cards:
+  - show_state: false
+    show_name: false
+    camera_view: live
+    type: picture-entity
+    entity: camera.flashforge_main
+  - type: vertical-stack
+    cards:
+      - type: custom:mushroom-title-card
+        title: >-
+          Layer – {{ states('sensor.flashforge_current_layer') }} of {{
+          states('sensor.flashforge_total_layer') }}
+        subtitle: "{{ states('sensor.flashforge_filename') }}"
+        alignment: center
+        title_tap_action:
+          action: url
+          url_path: http://192.168.1.125:4001/
+      - square: false
+        type: grid
+        cards:
+          - type: tile
+            entity: sensor.flashforge_current_print_state
+            name: Status
+            vertical: false
+            color: primary
+          - type: tile
+            entity: sensor.flashforge_print_duration
+            name: Elapsed
+            color: purple
+          - type: tile
+            entity: sensor.flashforge_print_eta
+            name: Time Left
+            vertical: false
+            color: green
+        columns: 3
+      - type: custom:bar-card
+        entity: sensor.flashforge_progress
+        name: Print Progress...
+        icon: mdi:clock-end
+        color: olivedrab
+        positions:
+          indicator: inside
+          name: inside
+      - square: false
+        type: grid
+        columns: 4
+        cards:
+          - type: custom:button-card
+            entity: button.flashforge_pause_print
+            color_type: icon
+            name: Pause
+            tap_action:
+              action: toggle
+          - type: custom:button-card
+            entity: button.flashforge_resume_print
+            color_type: icon
+            name: Resume
+            tap_action:
+              action: toggle
+          - type: custom:button-card
+            entity: button.flashforge_cancel_print
+            color_type: icon
+            name: Cancel
+            tap_action:
+              action: toggle
+            lock:
+              enabled: false
+            confirmation:
+              text: This will CANCEL the print. Are you sure?
+          - type: custom:button-card
+            entity: button.flashforge_emergency_stop
+            color_type: icon
+            color: red
+            name: Emergency
+            tap_action:
+              action: toggle
+            lock:
+              enabled: false
+            confirmation:
+              text: This will REBOOT the printer. Are you sure?
+  - type: custom:mushroom-entity-card
+    entity: sensor.flashforge_filament_used
+    grid_options:
+      columns: full
+    icon_color: primary
+    name: Filament Used
+
